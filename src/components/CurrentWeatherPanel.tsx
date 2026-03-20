@@ -1,7 +1,7 @@
 import React from "react";
 import {
   Thermometer, Droplets, Wind, Sun, Sunrise, Sunset,
-  Eye, Cloud, Gauge, ArrowUp,
+  Eye, Cloud, Gauge, ArrowUp, Compass,
 } from "lucide-react";
 import type { CurrentWeather, DailyWeather, TemperatureUnit } from "@/types/weather";
 import { convertTemp, getWindDirection, getUVLabel, getWeatherDescription } from "@/lib/weather-api";
@@ -12,9 +12,7 @@ interface Props {
   unit: TemperatureUnit;
 }
 
-const WeatherIcon: React.FC<{ code: number; isDay: boolean; size?: string }> = ({
-  code, isDay, size = "w-16 h-16",
-}) => {
+const WeatherIcon: React.FC<{ code: number; isDay: boolean }> = ({ code, isDay }) => {
   const getEmoji = () => {
     if (code === 0) return isDay ? "☀️" : "🌙";
     if (code <= 3) return isDay ? "⛅" : "☁️";
@@ -27,7 +25,18 @@ const WeatherIcon: React.FC<{ code: number; isDay: boolean; size?: string }> = (
     if (code <= 99) return "⛈️";
     return "🌤️";
   };
-  return <span className={`${size} flex items-center justify-center text-5xl animate-float`}>{getEmoji()}</span>;
+  return (
+    <div className="relative">
+      <span className="text-7xl md:text-8xl block" style={{ animation: 'float 5s ease-in-out infinite' }}>
+        {getEmoji()}
+      </span>
+      {/* Glow behind icon */}
+      <div
+        className="absolute inset-0 rounded-full blur-3xl opacity-20"
+        style={{ background: `hsl(var(--primary) / 0.4)` }}
+      />
+    </div>
+  );
 };
 
 const StatCard: React.FC<{
@@ -35,15 +44,20 @@ const StatCard: React.FC<{
   label: string;
   value: string;
   sub?: string;
+  accent?: string;
   className?: string;
-}> = ({ icon, label, value, sub, className = "" }) => (
-  <div className={`glass-card-hover p-4 flex flex-col gap-2 ${className}`}>
+}> = ({ icon, label, value, sub, accent, className = "" }) => (
+  <div className={`glass-card-hover shimmer-line p-4 flex flex-col gap-2.5 ${className}`}>
     <div className="flex items-center gap-2 text-muted-foreground">
-      {icon}
-      <span className="text-xs font-medium uppercase tracking-wider">{label}</span>
+      <div className="p-1.5 rounded-lg bg-primary/10">
+        {icon}
+      </div>
+      <span className="text-[11px] font-medium uppercase tracking-widest">{label}</span>
     </div>
-    <p className="text-xl font-semibold text-foreground font-mono">{value}</p>
-    {sub && <p className="text-xs text-muted-foreground">{sub}</p>}
+    <p className={`text-xl font-bold font-mono tracking-tight ${accent || 'text-foreground'}`}>
+      {value}
+    </p>
+    {sub && <p className="text-[11px] text-muted-foreground leading-tight">{sub}</p>}
   </div>
 );
 
@@ -59,84 +73,137 @@ const CurrentWeatherPanel: React.FC<Props> = ({ current, daily, unit }) => {
     }
   };
 
+  // Compute daylight progress
+  const now = new Date();
+  const sunriseTime = new Date(daily.sunrise);
+  const sunsetTime = new Date(daily.sunset);
+  const totalDaylight = sunsetTime.getTime() - sunriseTime.getTime();
+  const elapsed = now.getTime() - sunriseTime.getTime();
+  const daylightProgress = Math.max(0, Math.min(100, (elapsed / totalDaylight) * 100));
+
   return (
-    <div className="space-y-6">
-      {/* Hero */}
-      <div className={`glass-card p-6 md:p-8 ${weather.gradient} animate-reveal`}>
-        <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-          <WeatherIcon code={current.weatherCode} isDay={current.isDay} />
-          <div className="text-center md:text-left flex-1">
-            <p className="text-6xl md:text-7xl font-bold text-foreground font-mono tracking-tight">
-              {convertTemp(current.temperature, unit)}°
-              <span className="text-2xl text-muted-foreground ml-1">
-                {unit === "celsius" ? "C" : "F"}
-              </span>
-            </p>
-            <p className="text-lg text-muted-foreground mt-1">{weather.label}</p>
-            <p className="text-sm text-muted-foreground">
-              Feels like {convertTemp(current.apparentTemperature, unit)}°
-            </p>
-          </div>
-          <div className="text-center md:text-right space-y-1">
-            <p className="text-sm text-muted-foreground">
-              H: <span className="text-foreground font-mono">{convertTemp(daily.tempMax, unit)}°</span>
-              {" "}L: <span className="text-foreground font-mono">{convertTemp(daily.tempMin, unit)}°</span>
-            </p>
+    <div className="space-y-5">
+      {/* Hero Card */}
+      <div className={`glass-card overflow-hidden animate-reveal`}>
+        <div className={`p-6 md:p-8 ${weather.gradient}`}>
+          <div className="flex flex-col md:flex-row items-center gap-6 md:gap-8">
+            {/* Weather Icon */}
+            <div className="shrink-0">
+              <WeatherIcon code={current.weatherCode} isDay={current.isDay} />
+            </div>
+
+            {/* Main Temperature */}
+            <div className="text-center md:text-left flex-1 space-y-2">
+              <p className="text-7xl md:text-8xl lg:text-9xl font-bold text-foreground font-mono tracking-tighter glow-temp leading-none">
+                {convertTemp(current.temperature, unit)}°
+              </p>
+              <div className="flex items-center justify-center md:justify-start gap-2">
+                <span className="text-base md:text-lg text-muted-foreground">{weather.label}</span>
+                <span className="text-xs text-muted-foreground/60">•</span>
+                <span className="text-sm text-muted-foreground">
+                  Feels {convertTemp(current.apparentTemperature, unit)}°
+                </span>
+              </div>
+            </div>
+
+            {/* Right column - Hi/Lo & Sun */}
+            <div className="shrink-0 space-y-4 text-center md:text-right">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 justify-center md:justify-end">
+                  <ArrowUp className="w-3.5 h-3.5 text-weather-warm" />
+                  <span className="text-lg font-mono font-semibold text-foreground">
+                    {convertTemp(daily.tempMax, unit)}°
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 justify-center md:justify-end">
+                  <ArrowUp className="w-3.5 h-3.5 text-weather-cool rotate-180" />
+                  <span className="text-lg font-mono font-semibold text-foreground">
+                    {convertTemp(daily.tempMin, unit)}°
+                  </span>
+                </div>
+              </div>
+
+              {/* Daylight bar */}
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-2 text-xs text-muted-foreground justify-center md:justify-end">
+                  <Sunrise className="w-3 h-3" />
+                  <span className="font-mono">{formatTime(daily.sunrise)}</span>
+                  <span className="text-muted-foreground/40">—</span>
+                  <Sunset className="w-3 h-3" />
+                  <span className="font-mono">{formatTime(daily.sunset)}</span>
+                </div>
+                <div className="w-full h-1 bg-secondary rounded-full overflow-hidden">
+                  <div
+                    className="h-full rounded-full transition-all duration-1000"
+                    style={{
+                      width: `${daylightProgress}%`,
+                      background: 'linear-gradient(90deg, hsl(var(--weather-clear)), hsl(var(--weather-warm)))',
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+      {/* Stats Grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
         <StatCard
-          icon={<Droplets className="w-4 h-4" />}
+          icon={<Droplets className="w-4 h-4 text-primary" />}
           label="Humidity"
           value={`${current.humidity}%`}
+          sub={current.humidity > 70 ? "High moisture" : current.humidity < 30 ? "Dry air" : "Comfortable"}
           className="animate-reveal-delay-1"
         />
         <StatCard
-          icon={<Wind className="w-4 h-4" />}
+          icon={<Wind className="w-4 h-4 text-primary" />}
           label="Wind"
           value={`${current.windSpeed} km/h`}
-          sub={getWindDirection(current.windDirection)}
+          sub={`${getWindDirection(current.windDirection)} direction`}
           className="animate-reveal-delay-1"
         />
         <StatCard
-          icon={<Droplets className="w-4 h-4" />}
-          label="Precipitation"
+          icon={<Droplets className="w-4 h-4 text-primary" />}
+          label="Rain"
           value={`${current.precipitation} mm`}
-          sub={`${daily.precipitationProbMax}% chance`}
+          sub={`${daily.precipitationProbMax}% probability`}
           className="animate-reveal-delay-2"
         />
         <StatCard
-          icon={<Sun className="w-4 h-4" />}
+          icon={<Sun className="w-4 h-4 text-primary" />}
           label="UV Index"
           value={`${daily.uvIndexMax}`}
           sub={uv.label}
+          accent={uv.color}
           className="animate-reveal-delay-2"
         />
         <StatCard
-          icon={<Sunrise className="w-4 h-4" />}
-          label="Sunrise"
-          value={formatTime(daily.sunrise)}
-          className="animate-reveal-delay-3"
-        />
-        <StatCard
-          icon={<Sunset className="w-4 h-4" />}
-          label="Sunset"
-          value={formatTime(daily.sunset)}
-          className="animate-reveal-delay-3"
-        />
-        <StatCard
-          icon={<Gauge className="w-4 h-4" />}
+          icon={<Gauge className="w-4 h-4 text-primary" />}
           label="Pressure"
-          value={`${current.pressure} hPa`}
+          value={`${current.pressure}`}
+          sub="hPa"
+          className="animate-reveal-delay-3"
+        />
+        <StatCard
+          icon={<Cloud className="w-4 h-4 text-primary" />}
+          label="Cloud Cover"
+          value={`${current.cloudCover}%`}
+          sub={current.cloudCover > 80 ? "Overcast" : current.cloudCover > 40 ? "Partly cloudy" : "Clear skies"}
+          className="animate-reveal-delay-3"
+        />
+        <StatCard
+          icon={<Compass className="w-4 h-4 text-primary" />}
+          label="Wind Dir."
+          value={getWindDirection(current.windDirection)}
+          sub={`${current.windDirection}° bearing`}
           className="animate-reveal-delay-4"
         />
         <StatCard
-          icon={<Cloud className="w-4 h-4" />}
-          label="Cloud Cover"
-          value={`${current.cloudCover}%`}
+          icon={<Thermometer className="w-4 h-4 text-primary" />}
+          label="Dew Point"
+          value={`${convertTemp(current.temperature - ((100 - current.humidity) / 5), unit)}°`}
+          sub="Approximate"
           className="animate-reveal-delay-4"
         />
       </div>

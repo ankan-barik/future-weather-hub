@@ -76,10 +76,13 @@
 }
 
 @layer components {
+  /* ─── Glass Cards ─── */
   .glass-card {
-    @apply bg-card/60 backdrop-blur-xl border border-glass-border rounded-xl;
-    box-shadow: 0 4px 24px -1px hsl(var(--primary) / 0.06),
-                0 0 0 1px hsl(var(--glass-border) / 0.5);
+    @apply bg-card/50 backdrop-blur-2xl border border-glass-border rounded-2xl;
+    box-shadow:
+      0 4px 32px -4px hsl(var(--primary) / 0.08),
+      0 0 0 1px hsl(var(--glass-border) / 0.4),
+      inset 0 1px 0 0 hsl(210 20% 92% / 0.03);
   }
 
   .glass-card-hover {
@@ -87,87 +90,154 @@
   }
 
   .glass-card-hover:hover {
-    box-shadow: 0 8px 32px -4px hsl(var(--primary) / 0.12),
-                0 0 0 1px hsl(var(--primary) / 0.15);
-    transform: translateY(-2px);
+    box-shadow:
+      0 8px 40px -4px hsl(var(--primary) / 0.15),
+      0 0 0 1px hsl(var(--primary) / 0.2),
+      inset 0 1px 0 0 hsl(210 20% 92% / 0.06);
+    transform: translateY(-3px);
   }
 
   .glass-card-hover:active {
-    transform: scale(0.98);
+    transform: scale(0.97) translateY(0);
   }
 
+  /* ─── Weather Gradients ─── */
   .weather-gradient-clear {
-    background: linear-gradient(135deg, hsl(199 89% 48% / 0.15), hsl(172 66% 50% / 0.08));
+    background: linear-gradient(135deg, hsl(199 89% 48% / 0.12), hsl(172 66% 50% / 0.06));
   }
 
   .weather-gradient-rain {
-    background: linear-gradient(135deg, hsl(215 80% 55% / 0.15), hsl(220 60% 30% / 0.1));
+    background: linear-gradient(135deg, hsl(215 80% 55% / 0.12), hsl(220 60% 30% / 0.08));
   }
 
   .weather-gradient-storm {
-    background: linear-gradient(135deg, hsl(260 50% 45% / 0.2), hsl(220 40% 20% / 0.1));
+    background: linear-gradient(135deg, hsl(260 50% 45% / 0.15), hsl(220 40% 20% / 0.08));
   }
 
   .weather-gradient-snow {
-    background: linear-gradient(135deg, hsl(200 20% 85% / 0.1), hsl(210 30% 50% / 0.05));
+    background: linear-gradient(135deg, hsl(200 20% 85% / 0.08), hsl(210 30% 50% / 0.04));
   }
 
   .weather-gradient-warm {
-    background: linear-gradient(135deg, hsl(24 95% 53% / 0.12), hsl(45 93% 58% / 0.06));
+    background: linear-gradient(135deg, hsl(24 95% 53% / 0.1), hsl(45 93% 58% / 0.05));
   }
 
   .weather-gradient-night {
-    background: linear-gradient(135deg, hsl(240 30% 15% / 0.3), hsl(260 40% 20% / 0.15));
+    background: linear-gradient(135deg, hsl(240 30% 15% / 0.25), hsl(260 40% 20% / 0.12));
   }
 
+  /* ─── Reveal Animations ─── */
   .animate-reveal {
-    animation: reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation: reveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
   .animate-reveal-delay-1 {
-    animation: reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both;
+    animation: reveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
   }
 
   .animate-reveal-delay-2 {
-    animation: reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.16s both;
+    animation: reveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.18s both;
   }
 
   .animate-reveal-delay-3 {
-    animation: reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.24s both;
+    animation: reveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.26s both;
   }
 
   .animate-reveal-delay-4 {
-    animation: reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.32s both;
+    animation: reveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.34s both;
   }
 
+  /* ─── Scrollbars ─── */
   .scrollbar-thin {
     scrollbar-width: thin;
-    scrollbar-color: hsl(var(--muted-foreground) / 0.3) transparent;
+    scrollbar-color: hsl(var(--muted-foreground) / 0.2) transparent;
   }
 
   .scrollbar-thin::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 5px;
+    height: 5px;
   }
 
   .scrollbar-thin::-webkit-scrollbar-thumb {
-    background: hsl(var(--muted-foreground) / 0.3);
-    border-radius: 3px;
+    background: hsl(var(--muted-foreground) / 0.2);
+    border-radius: 4px;
   }
 
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.35);
+  }
+
+  /* ─── Text Gradient ─── */
   .text-gradient-primary {
     background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
+
+  /* ─── Glow effects ─── */
+  .glow-primary {
+    filter: drop-shadow(0 0 20px hsl(var(--primary) / 0.3));
+  }
+
+  .glow-temp {
+    text-shadow:
+      0 0 40px hsl(var(--primary) / 0.3),
+      0 0 80px hsl(var(--primary) / 0.1);
+  }
+
+  /* ─── Stat ring gauge ─── */
+  .stat-ring {
+    position: relative;
+  }
+
+  .stat-ring::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    padding: 2px;
+    background: conic-gradient(
+      from 0deg,
+      hsl(var(--primary) / 0.4),
+      hsl(var(--accent) / 0.2),
+      transparent 70%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+
+  /* ─── Shimmer line ─── */
+  .shimmer-line {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .shimmer-line::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsl(var(--primary) / 0.08),
+      transparent
+    );
+    animation: shimmer 4s ease-in-out infinite;
+  }
 }
 
+/* ─── Keyframes ─── */
 @keyframes reveal {
   from {
     opacity: 0;
-    transform: translateY(16px);
-    filter: blur(4px);
+    transform: translateY(18px);
+    filter: blur(6px);
   }
   to {
     opacity: 1;
@@ -178,15 +248,43 @@
 
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-8px); }
+  50% { transform: translateY(-10px); }
 }
 
 @keyframes pulse-glow {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.8; }
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
 }
 
 @keyframes spin-slow {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  50% { left: 200%; }
+  100% { left: 200%; }
+}
+
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(30px, -20px) scale(1.05); }
+  50% { transform: translate(-10px, -40px) scale(0.98); }
+  75% { transform: translate(-30px, -10px) scale(1.02); }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+@keyframes rain-fall {
+  0% { transform: translateY(-100vh) translateX(0); opacity: 0.6; }
+  100% { transform: translateY(100vh) translateX(-20px); opacity: 0; }
+}
+
+@keyframes flash {
+  0%, 90%, 100% { opacity: 0; }
+  92%, 95% { opacity: 0.3; }
 }

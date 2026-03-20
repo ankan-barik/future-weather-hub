@@ -1,0 +1,290 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@layer base {
+  :root {
+    --background: 220 20% 7%;
+    --foreground: 210 20% 92%;
+
+    --card: 220 18% 11%;
+    --card-foreground: 210 20% 92%;
+
+    --popover: 220 18% 11%;
+    --popover-foreground: 210 20% 92%;
+
+    --primary: 199 89% 48%;
+    --primary-foreground: 220 20% 7%;
+
+    --secondary: 220 16% 16%;
+    --secondary-foreground: 210 20% 82%;
+
+    --muted: 220 14% 14%;
+    --muted-foreground: 215 12% 52%;
+
+    --accent: 172 66% 50%;
+    --accent-foreground: 220 20% 7%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 210 20% 98%;
+
+    --border: 220 14% 18%;
+    --input: 220 14% 18%;
+    --ring: 199 89% 48%;
+
+    --radius: 0.75rem;
+
+    --weather-warm: 24 95% 53%;
+    --weather-cool: 199 89% 48%;
+    --weather-cold: 210 60% 60%;
+    --weather-rain: 215 80% 55%;
+    --weather-storm: 260 50% 45%;
+    --weather-snow: 200 20% 85%;
+    --weather-clear: 45 93% 58%;
+    --weather-night: 240 30% 15%;
+
+    --chart-1: 199 89% 48%;
+    --chart-2: 172 66% 50%;
+    --chart-3: 24 95% 53%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+
+    --glass-bg: 220 18% 11%;
+    --glass-border: 220 14% 22%;
+
+    --sidebar-background: 220 18% 9%;
+    --sidebar-foreground: 210 20% 92%;
+    --sidebar-primary: 199 89% 48%;
+    --sidebar-primary-foreground: 220 20% 7%;
+    --sidebar-accent: 220 16% 16%;
+    --sidebar-accent-foreground: 210 20% 82%;
+    --sidebar-border: 220 14% 18%;
+    --sidebar-ring: 199 89% 48%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+}
+
+@layer components {
+  /* ─── Glass Cards ─── */
+  .glass-card {
+    @apply bg-card/50 backdrop-blur-2xl border border-glass-border rounded-2xl;
+    box-shadow:
+      0 4px 32px -4px hsl(var(--primary) / 0.08),
+      0 0 0 1px hsl(var(--glass-border) / 0.4),
+      inset 0 1px 0 0 hsl(210 20% 92% / 0.03);
+  }
+
+  .glass-card-hover {
+    @apply glass-card transition-all duration-300 ease-out;
+  }
+
+  .glass-card-hover:hover {
+    box-shadow:
+      0 8px 40px -4px hsl(var(--primary) / 0.15),
+      0 0 0 1px hsl(var(--primary) / 0.2),
+      inset 0 1px 0 0 hsl(210 20% 92% / 0.06);
+    transform: translateY(-3px);
+  }
+
+  .glass-card-hover:active {
+    transform: scale(0.97) translateY(0);
+  }
+
+  /* ─── Weather Gradients ─── */
+  .weather-gradient-clear {
+    background: linear-gradient(135deg, hsl(199 89% 48% / 0.12), hsl(172 66% 50% / 0.06));
+  }
+
+  .weather-gradient-rain {
+    background: linear-gradient(135deg, hsl(215 80% 55% / 0.12), hsl(220 60% 30% / 0.08));
+  }
+
+  .weather-gradient-storm {
+    background: linear-gradient(135deg, hsl(260 50% 45% / 0.15), hsl(220 40% 20% / 0.08));
+  }
+
+  .weather-gradient-snow {
+    background: linear-gradient(135deg, hsl(200 20% 85% / 0.08), hsl(210 30% 50% / 0.04));
+  }
+
+  .weather-gradient-warm {
+    background: linear-gradient(135deg, hsl(24 95% 53% / 0.1), hsl(45 93% 58% / 0.05));
+  }
+
+  .weather-gradient-night {
+    background: linear-gradient(135deg, hsl(240 30% 15% / 0.25), hsl(260 40% 20% / 0.12));
+  }
+
+  /* ─── Reveal Animations ─── */
+  .animate-reveal {
+    animation: reveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .animate-reveal-delay-1 {
+    animation: reveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+  }
+
+  .animate-reveal-delay-2 {
+    animation: reveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.18s both;
+  }
+
+  .animate-reveal-delay-3 {
+    animation: reveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.26s both;
+  }
+
+  .animate-reveal-delay-4 {
+    animation: reveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.34s both;
+  }
+
+  /* ─── Scrollbars ─── */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted-foreground) / 0.2) transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground) / 0.2);
+    border-radius: 4px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.35);
+  }
+
+  /* ─── Text Gradient ─── */
+  .text-gradient-primary {
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ─── Glow effects ─── */
+  .glow-primary {
+    filter: drop-shadow(0 0 20px hsl(var(--primary) / 0.3));
+  }
+
+  .glow-temp {
+    text-shadow:
+      0 0 40px hsl(var(--primary) / 0.3),
+      0 0 80px hsl(var(--primary) / 0.1);
+  }
+
+  /* ─── Stat ring gauge ─── */
+  .stat-ring {
+    position: relative;
+  }
+
+  .stat-ring::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    padding: 2px;
+    background: conic-gradient(
+      from 0deg,
+      hsl(var(--primary) / 0.4),
+      hsl(var(--accent) / 0.2),
+      transparent 70%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+
+  /* ─── Shimmer line ─── */
+  .shimmer-line {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .shimmer-line::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsl(var(--primary) / 0.08),
+      transparent
+    );
+    animation: shimmer 4s ease-in-out infinite;
+  }
+}
+
+/* ─── Keyframes ─── */
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  50% { left: 200%; }
+  100% { left: 200%; }
+}
+
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(30px, -20px) scale(1.05); }
+  50% { transform: translate(-10px, -40px) scale(0.98); }
+  75% { transform: translate(-30px, -10px) scale(1.02); }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+@keyframes rain-fall {
+  0% { transform: translateY(-100vh) translateX(0); opacity: 0.6; }
+  100% { transform: translateY(100vh) translateX(-20px); opacity: 0; }
+}
+
+@keyframes flash {
+  0%, 90%, 100% { opacity: 0; }
+  92%, 95% { opacity: 0.3; }
+}
